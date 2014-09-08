@@ -1,42 +1,40 @@
 package com.denniskubes.adt;
 
-import java.util.Iterator;
-
 public class ArrayList<T>
   implements List<T> {
-  
+
   private T[] backing = null;
-  private int index = 0;
+  private int size = 0;
   private int initialCapacity = 10;
-  
+
   private boolean isOutOfBounds(int pos) {
-    return pos < 0 || pos > (index + 1);
+    return pos < 0 || pos > (size + 1);
   }
-  
+
   private void checkOutOfBounds(int pos) {
     if (isOutOfBounds(pos)) {
       throw new IndexOutOfBoundsException();
     }
   }
-  
+
   private void ensureCapacity(int capacity) {
-    
+
     if (capacity > backing.length) {
       T[] biggerBacking = (T[])new Object[backing.length * 2];
-      System.arraycopy(backing, 0, biggerBacking, 0, index);
+      System.arraycopy(backing, 0, biggerBacking, 0, size);
       backing = biggerBacking;
     }
     else if (capacity <= (backing.length / 4) && capacity >= initialCapacity) {
       T[] smallerBacking = (T[])new Object[backing.length / 2];
-      System.arraycopy(backing, 0, smallerBacking, 0, index);
+      System.arraycopy(backing, 0, smallerBacking, 0, size);
       backing = smallerBacking;
     }
   }
-  
+
   public ArrayList() {
     backing = (T[])new Object[initialCapacity];
   }
-  
+
   public ArrayList(int initialCapacity) {
     this.initialCapacity = initialCapacity;
     backing = (T[])new Object[initialCapacity];
@@ -45,7 +43,28 @@ public class ArrayList<T>
   @Override
   public void add(T obj) {
     ensureCapacity(size() + 1);
-    backing[index++] = obj;
+    backing[size++] = obj;
+  }
+
+  @Override
+  public void insert(int pos, T obj) {
+
+    checkOutOfBounds(pos);
+    ensureCapacity(size + 1);
+    if (pos < size) {
+      System.arraycopy(backing, pos, backing, pos + 1, size - pos);
+    }
+    backing[pos] = obj;
+    size++;
+  }
+
+  @Override
+  public T set(int pos, T obj) {
+
+    checkOutOfBounds(pos);
+    T old = backing[pos];
+    backing[pos] = obj;
+    return old;
   }
 
   @Override
@@ -53,11 +72,11 @@ public class ArrayList<T>
     checkOutOfBounds(pos);
     return backing[pos];
   }
-  
+
   @Override
   public int indexOf(T obj) {
-    
-    for (int i = 0; i < index; i++) {
+
+    for (int i = 0; i < size; i++) {
       T cur = backing[i];
       if (cur != null && cur.equals(obj)) {
         return i;
@@ -73,17 +92,17 @@ public class ArrayList<T>
 
   @Override
   public T remove(int pos) {
-    
+
     checkOutOfBounds(pos);
     T obj = backing[pos];
     backing[pos] = null;
-    index--;
-    if (pos < index) {
-      System.arraycopy(backing, pos + 1, backing, pos, index - pos);
-      backing[index] = null;
+    size--;
+    if (pos < size) {
+      System.arraycopy(backing, pos + 1, backing, pos, size - pos);
+      backing[size] = null;
     }
-    ensureCapacity(index);
-    
+    ensureCapacity(size);
+
     return obj;
   }
 
@@ -95,10 +114,10 @@ public class ArrayList<T>
       remove(pos);
       return true;
     }
-    
+
     return false;
   }
-  
+
   @Override
   public int capacity() {
     return backing.length;
@@ -106,12 +125,12 @@ public class ArrayList<T>
 
   @Override
   public int size() {
-    return index;
+    return size;
   }
 
   @Override
   public Iterator<T> iterator() {
-    return new ListIterator<T>(this);
+    return new ArrayIterator<T>(backing, 0, size);
   }
 
 }
