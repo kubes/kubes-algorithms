@@ -118,7 +118,6 @@ public class ArrayList<T>
     return false;
   }
 
-  @Override
   public int capacity() {
     return backing.length;
   }
@@ -126,6 +125,12 @@ public class ArrayList<T>
   @Override
   public int size() {
     return size;
+  }
+  
+  @Override
+  public void clear() {
+    backing = (T[])new Object[initialCapacity];
+    size = 0;
   }
 
   @Override

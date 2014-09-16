@@ -18,9 +18,9 @@ public interface List<T> {
 
   public boolean remove(T obj);
 
-  public int capacity();
-
   public int size();
+  
+  public void clear();
 
   public Iterator<T> iterator();
 }
