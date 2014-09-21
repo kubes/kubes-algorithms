@@ -20,6 +20,8 @@ public interface List<T> {
 
   public int size();
   
+  public boolean isEmpty();
+  
   public void clear();
 
   public Iterator<T> iterator();

@@ -21,18 +21,18 @@ public class TestArrayList
     ArrayList<String> list2 = new ArrayList<String>(2);
     Assert.assertTrue(list2.capacity() == 2);
 
-    list2.add("Dennis");
-    list2.add("Bob");
-    list2.add("John");
+    list2.add(VALUE_1);
+    list2.add(VALUE_2);
+    list2.add(VALUE_3);
     Assert.assertTrue(list2.capacity() == 4);
 
-    list2.add("Suzie");
-    list2.add("Spot");
+    list2.add(VALUE_4);
+    list2.add("VALUE_4");
     Assert.assertTrue(list2.capacity() == 8);
 
-    list2.remove("Dennis");
-    list2.remove("Bob");
-    list2.remove("John");
+    list2.remove(VALUE_1);
+    list2.remove(VALUE_2);
+    list2.remove(VALUE_3);
     Assert.assertTrue(list2.capacity() == 4);
   }
 

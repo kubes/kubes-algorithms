@@ -1,10 +1,11 @@
 package com.denniskubes.adt;
 
-public class SinglyLinkedList<T>
+public class DoublyLinkedList<T>
   implements List<T> {
 
   private class Entry {
     T value;
+    Entry previous;
     Entry next;
   }
 
@@ -24,8 +25,12 @@ public class SinglyLinkedList<T>
     return entry;
   }
 
-  public SinglyLinkedList() {
+  public DoublyLinkedList() {
+    
     head.next = tail;
+    head.previous = null;
+    tail.previous = head;
+    tail.next = null;
   }
 
   @Override
@@ -43,15 +48,16 @@ public class SinglyLinkedList<T>
 
     // go to the entry right before the pos
     Entry before = getEntryBefore(pos);
+    Entry after = before.next;
 
-    // create the new entry
     Entry newEntry = new Entry();
     newEntry.value = obj;
+    newEntry.previous = before;
+    newEntry.next = after;
 
-    // insert the new entry in the chain
-    newEntry.next = before.next;
+    after.previous = newEntry;
     before.next = newEntry;
-
+    
     size++;
   }
 
@@ -68,14 +74,17 @@ public class SinglyLinkedList<T>
     Entry atPos = beforePos.next;
     Entry afterPos = atPos.next;
 
-    // create a new entry, point its next to after position and point before
-    // entry's next to the new entry
     Entry newEntry = new Entry();
-    newEntry.value = obj;
+    newEntry.value = obj;    
     newEntry.next = afterPos;
+    newEntry.previous = beforePos;
+    
     beforePos.next = newEntry;
+    afterPos.previous = newEntry;
 
+    // return the old entry at position
     atPos.next = null;
+    atPos.previous = null;
     return atPos.value;
   }
 
@@ -121,7 +130,7 @@ public class SinglyLinkedList<T>
     if (pos < 0 || pos >= size) {
       throw new IndexOutOfBoundsException();
     }
-
+    
     // get the entry before, after and at the position
     Entry beforePos = getEntryBefore(pos);
     Entry atPos = beforePos.next;
@@ -129,9 +138,12 @@ public class SinglyLinkedList<T>
 
     // link the before entry to the after entry, removing the entry at pos
     beforePos.next = afterPos;
+    afterPos.previous = beforePos;
+    
+    atPos.next = null;
+    atPos.previous = null;
     size--;
 
-    atPos.next = null;
     return atPos.value;
   }
 
@@ -150,16 +162,16 @@ public class SinglyLinkedList<T>
   public int size() {
     return size;
   }
-  
-  @Override
-  public boolean isEmpty() {
-    return size == 0;
-  }
 
   @Override
   public void clear() {
     head.next = null;
     size = 0;
+  }
+  
+  @Override
+  public boolean isEmpty() {
+    return size == 0;
   }
 
   @Override
@@ -168,59 +180,47 @@ public class SinglyLinkedList<T>
     return new Iterator<T>() {
 
       private Entry current = head;
-      int pos = 0;
 
       @Override
       public void first() {
         current = head;
-        pos = 0;
       }
 
       @Override
       public void last() {
         current = tail;
-        pos = size();
       }
 
       @Override
       public boolean hasNext() {
-        
-        // is the next one the end
         return current.next != tail;
       }
 
       @Override
       public boolean hasPrevious() {
-        return pos > 0;
+        return current.previous != head;
       }
 
       @Override
       public T next() {
 
-        // we have reached the end, no next
         if (current.next == tail) {
           throw new IndexOutOfBoundsException();
         }
 
-        pos++;
         current = current.next;
         return current.value;
       }
 
-
       @Override
       public T previous() {
-        
-        // we have reached the beginning, no previous
-        if (pos == 0) {
+
+        if (current.previous == head) {
           throw new IndexOutOfBoundsException();
         }
-        
-        // each call to preview requires searching all the way through the 
-        // entire list to the position because of singly linked structure
-        T value = get(pos - 1);
-        pos--;
-        return value;
+
+        current = current.previous;
+        return current.value;
       }
 
     };

@@ -8,152 +8,442 @@ public abstract class BaseListTester {
 
   public abstract List<String> getList();
 
+  public static String VALUE_1 = "value1";
+  public static String VALUE_2 = "value2";
+  public static String VALUE_3 = "value3";
+  public static String VALUE_4 = "value4";
+
+  @Test
+  public void testInsertIntoEmptyList() {
+
+    List<String> list = getList();
+    Assert.assertEquals(list.size(), 0);
+
+    list.insert(0, VALUE_1);
+
+    Assert.assertEquals(list.size(), 1);
+    Assert.assertFalse(list.isEmpty());
+    Assert.assertSame(VALUE_1, list.get(0));
+  }
+
+  @Test
+  public void testInsertBetweenElements() {
+
+    List<String> list = getList();
+    list.insert(0, VALUE_1);
+    list.insert(1, VALUE_2);
+    list.insert(1, VALUE_3);
+
+    Assert.assertEquals(list.size(), 3);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_3, list.get(1));
+    Assert.assertSame(VALUE_2, list.get(2));
+  }
+
+  @Test
+  public void testInsertAfterLastElement() {
+
+    List<String> list = getList();
+    list.insert(0, VALUE_1);
+    list.insert(1, VALUE_2);
+
+    Assert.assertEquals(list.size(), 2);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_2, list.get(1));
+  }
+
+  @Test
+  public void testInsertOutOfBounds() {
+
+    List<String> list = getList();
+
+    try {
+      list.insert(-1, VALUE_1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.insert(1, VALUE_1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+  }
+
   @Test
   public void testAdd() {
 
     List<String> list = getList();
-    Assert.assertTrue(list.size() == 0);
-    list.add("Dennis");
-    Assert.assertEquals("Dennis", list.get(0));
-    list.add("Bob");
-    Assert.assertEquals("Bob", list.get(1));
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Assert.assertEquals(list.size(), 3);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_2, list.get(1));
+    Assert.assertSame(VALUE_3, list.get(2));
   }
 
   @Test
-  public void testInsert() {
+  public void testSetOutOfBounds() {
 
     List<String> list = getList();
-    Assert.assertTrue(list.size() == 0);
-    list.add("Dennis");
-    Assert.assertEquals("Dennis", list.get(0));
-    list.add("Bob");
-    Assert.assertEquals("Bob", list.get(1));
 
-    list.insert(1, "John");
-    Assert.assertEquals("Dennis", list.get(0));
-    Assert.assertEquals("John", list.get(1));
-    Assert.assertEquals("Bob", list.get(2));
-    Assert.assertTrue(list.size() == 3);
+    try {
+      list.set(-1, VALUE_1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.set(0, VALUE_1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.add(VALUE_1);
+      list.set(1, VALUE_2);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
   }
 
   @Test
   public void testSet() {
 
     List<String> list = getList();
-    Assert.assertTrue(list.size() == 0);
-    list.add("Dennis");
-    Assert.assertEquals("Dennis", list.get(0));
-    list.add("Bob");
-    Assert.assertEquals("Bob", list.get(1));
+    list.add(VALUE_1);
+    list.add(VALUE_2);
 
-    list.set(1, "John");
-    Assert.assertEquals("Dennis", list.get(0));
-    Assert.assertEquals("John", list.get(1));
-    Assert.assertTrue(list.size() == 2);
+    list.set(1, VALUE_3);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_3, list.get(1));
+  }
+
+  @Test
+  public void testGetOutOfBounds() {
+
+    List<String> list = getList();
+
+    try {
+      list.get(-1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.get(0);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.add(VALUE_1);
+      list.get(1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testRemoveOnlyElement() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+
+    Assert.assertEquals(list.size(), 1);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_1, list.remove(0));
+    Assert.assertEquals(list.size(), 0);
+  }
+
+  @Test
+  public void testRemoveFirstElement() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Assert.assertEquals(list.size(), 3);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_2, list.get(1));
+    Assert.assertSame(VALUE_3, list.get(2));
+
+    Assert.assertSame(VALUE_1, list.remove(0));
+    Assert.assertEquals(list.size(), 2);
+    Assert.assertSame(VALUE_2, list.get(0));
+    Assert.assertSame(VALUE_3, list.get(1));
+  }
+
+  @Test
+  public void testRemoveBetweenElement() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Assert.assertEquals(list.size(), 3);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_2, list.get(1));
+    Assert.assertSame(VALUE_3, list.get(2));
+
+    Assert.assertSame(VALUE_2, list.remove(1));
+    Assert.assertEquals(list.size(), 2);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_3, list.get(1));
+  }
+
+  @Test
+  public void testRemoveLastElement() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Assert.assertEquals(list.size(), 3);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_2, list.get(1));
+    Assert.assertSame(VALUE_3, list.get(2));
+
+    Assert.assertSame(VALUE_3, list.remove(2));
+    Assert.assertEquals(list.size(), 2);
+    Assert.assertSame(VALUE_1, list.get(0));
+    Assert.assertSame(VALUE_2, list.get(1));
+  }
+
+  @Test
+  public void testRemoveOutOfBounds() {
+
+    List<String> list = getList();
+
+    try {
+      list.remove(-1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.remove(0);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+
+    try {
+      list.add(VALUE_1);
+      list.remove(1);
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testRemoveByValue() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Assert.assertTrue(list.remove(VALUE_1));
+    Assert.assertFalse(list.remove(VALUE_1));
+    Assert.assertEquals(list.size(), 2);
+
+    Assert.assertTrue(list.remove(VALUE_2));
+    Assert.assertFalse(list.remove(VALUE_2));
+    Assert.assertEquals(list.size(), 1);
+
+    Assert.assertTrue(list.remove(VALUE_3));
+    Assert.assertFalse(list.remove(VALUE_3));
+    Assert.assertEquals(list.size(), 0);
+  }
+
+  @Test
+  public void testEmptyIteration() {
+
+    List<String> list = getList();
+    Iterator<String> iterator = list.iterator();
+    Assert.assertFalse(iterator.hasNext());
+
+    try {
+      iterator.next();
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+  }
+
+  @Test
+  public void testForwardIteration() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Iterator<String> iterator = list.iterator();
+    iterator.first();
+
+    Assert.assertTrue(iterator.hasNext());
+    Assert.assertSame(VALUE_1, iterator.next());
+
+    Assert.assertTrue(iterator.hasNext());
+    Assert.assertSame(VALUE_2, iterator.next());
+
+    Assert.assertTrue(iterator.hasNext());
+    Assert.assertSame(VALUE_3, iterator.next());
+    
+    Assert.assertFalse(iterator.hasNext());
+    try {
+      iterator.next();
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+  }
+  
+  @Test
+  public void testReverseIteration() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
+
+    Iterator<String> iterator = list.iterator();
+    iterator.last();
+
+    Assert.assertTrue(iterator.hasPrevious());
+    Assert.assertSame(VALUE_3, iterator.previous());
+
+    Assert.assertTrue(iterator.hasPrevious());
+    Assert.assertSame(VALUE_2, iterator.previous());
+
+    Assert.assertTrue(iterator.hasPrevious());
+    Assert.assertSame(VALUE_1, iterator.previous());
+    
+    Assert.assertFalse(iterator.hasPrevious());
+    try {
+      iterator.previous();
+      Assert.fail();
+    }
+    catch (IndexOutOfBoundsException iobe) {
+      // expected
+    }
+  }
+  
+  
+  @Test
+  public void testIterationAfterChanges() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_4);
+    list.remove(VALUE_2);
+    list.insert(1, VALUE_2);
+    list.set(2, VALUE_3);
+
+    Iterator<String> iterator = list.iterator();
+    iterator.first();
+    Assert.assertSame(VALUE_1, iterator.next());
+    Assert.assertSame(VALUE_2, iterator.next());
+    Assert.assertSame(VALUE_3, iterator.next());
+
+    iterator.last();
+    Assert.assertSame(VALUE_3, iterator.previous());
+    Assert.assertSame(VALUE_2, iterator.previous());
+    Assert.assertSame(VALUE_1, iterator.previous());
   }
 
   @Test
   public void testIndexOf() {
 
     List<String> list = getList();
-    list.add("Dennis");
-    list.add("Bob");
-    Assert.assertEquals(list.indexOf("Dennis"), 0);
-    Assert.assertEquals(list.indexOf("Bob"), 1);
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    Assert.assertEquals(list.indexOf(VALUE_1), 0);
+    Assert.assertEquals(list.indexOf(VALUE_2), 1);
   }
 
   @Test
   public void testContains() {
 
-    List<String> list =  getList();
-    list.add("Bob");
-    Assert.assertTrue(list.contains("Bob"));
-    Assert.assertFalse(list.contains("John"));
-  }
-
-  @Test
-  public void testRemove() {
-
-    List<String> list =  getList();
-    list.add("Dennis");
-    list.add("Bob");
-    Assert.assertEquals("Bob", list.remove(1));
-    Assert.assertEquals("Dennis", list.remove(0));
-
-    List<String> list2 =  getList();
-    list2.add("Dennis");
-    list2.add("Bob");
-    list2.add("John");
-    list2.add("Suzie");
-    list2.add("Spot");
-    Assert.assertEquals("Suzie", list2.remove(3));
-    Assert.assertEquals("Dennis", list2.remove(0));
-    Assert.assertEquals("Spot", list2.remove(2));
+    List<String> list = getList();
+    list.add(VALUE_1);
+    Assert.assertTrue(list.contains(VALUE_1));
+    Assert.assertFalse(list.contains(VALUE_2));
   }
 
   @Test
   public void testSize() {
 
-    List<String> list =  getList();
-    Assert.assertTrue(list.size() == 0);
+    List<String> list = getList();
+    Assert.assertEquals(list.size(), 0);
 
-    list.add("Dennis");
-    list.add("Bob");
-    list.add("John");
-    Assert.assertTrue(list.size() == 3);
+    list.add(VALUE_1);
+    Assert.assertEquals(list.size(), 1);
+    
+    list.add(VALUE_2);
+    Assert.assertEquals(list.size(), 2);
+    
+    list.add(VALUE_3);
+    Assert.assertEquals(list.size(), 3);
 
-    list.add("Suzie");
-    list.add("Spot");
-    Assert.assertTrue(list.size() == 5);
+    list.add(VALUE_4);
+    Assert.assertEquals(list.size(), 4);
 
-    Assert.assertTrue(list.remove("Dennis"));
-    Assert.assertTrue(list.remove("Bob"));
-    Assert.assertTrue(list.remove("John"));
-    Assert.assertTrue(list.size() == 2);
+    list.remove(VALUE_1);
+    Assert.assertEquals(list.size(), 3);
+    
+    list.remove(0);
+    Assert.assertEquals(list.size(), 2);
+    
+    list.set(0, VALUE_4);
+    Assert.assertEquals(list.size(), 2);
   }
-  
+
   @Test
-  public void testClear() {
+  public void testClearIsEmpty() {
+
+    List<String> list = getList();
+    list.add(VALUE_1);
+    list.add(VALUE_2);
+    list.add(VALUE_3);
     
-    List<String> list =  getList();
-    list.add("Dennis");
-    list.add("Bob");
-    list.add("John");
-    Assert.assertTrue(list.size() == 3);
-    
+    Assert.assertEquals(list.size(), 3);
+    Assert.assertFalse(list.isEmpty());
+
     list.clear();
-    Assert.assertTrue(list.size() == 0);
+    Assert.assertEquals(list.size(), 0);
+    Assert.assertTrue(list.isEmpty());
   }
-  
-  @Test
-  public void testIterator() {
 
-    List<String> list =  getList();
-    list.add("Dennis");
-    list.add("Mark");
-    list.add("Suzie");
-    list.add("Spot");    
-    Iterator<String> it = list.iterator();
-    
-    Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(it.next(), "Dennis");
-    Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(it.next(), "Mark");
-    Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(it.next(), "Suzie");
-    Assert.assertTrue(it.hasNext());
-    Assert.assertEquals(it.next(), "Spot");
-    Assert.assertFalse(it.hasNext());
-    
-    it.last();
-    Assert.assertTrue(it.hasPrevious());
-    Assert.assertEquals(it.previous(), "Spot");
-    Assert.assertTrue(it.hasPrevious());
-    Assert.assertEquals(it.previous(), "Suzie");
-    Assert.assertTrue(it.hasPrevious());
-    Assert.assertEquals(it.previous(), "Mark");
-    Assert.assertTrue(it.hasPrevious());
-    Assert.assertEquals(it.previous(), "Dennis");
-    Assert.assertFalse(it.hasPrevious());
-  }
 }

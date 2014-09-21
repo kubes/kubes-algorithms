@@ -49,11 +49,21 @@ public class ArrayIterator<T>
 
   @Override
   public T next() {
+    
+    if (cur == end) {
+      throw new IndexOutOfBoundsException();
+    }
+    
     return values[cur++];
   }
 
   @Override
   public T previous() {
+    
+    if (cur < start) {
+      throw new IndexOutOfBoundsException();
+    }
+    
     return values[cur--];
   }
 

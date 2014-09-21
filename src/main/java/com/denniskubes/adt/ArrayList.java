@@ -7,16 +7,6 @@ public class ArrayList<T>
   private int size = 0;
   private int initialCapacity = 10;
 
-  private boolean isOutOfBounds(int pos) {
-    return pos < 0 || pos > (size + 1);
-  }
-
-  private void checkOutOfBounds(int pos) {
-    if (isOutOfBounds(pos)) {
-      throw new IndexOutOfBoundsException();
-    }
-  }
-
   private void ensureCapacity(int capacity) {
 
     if (capacity > backing.length) {
@@ -49,7 +39,10 @@ public class ArrayList<T>
   @Override
   public void insert(int pos, T obj) {
 
-    checkOutOfBounds(pos);
+    if (pos < 0 || pos > size) {
+      throw new IndexOutOfBoundsException();
+    }
+    
     ensureCapacity(size + 1);
     if (pos < size) {
       System.arraycopy(backing, pos, backing, pos + 1, size - pos);
@@ -61,7 +54,10 @@ public class ArrayList<T>
   @Override
   public T set(int pos, T obj) {
 
-    checkOutOfBounds(pos);
+    if (pos < 0 || pos >= size) {
+      throw new IndexOutOfBoundsException();
+    }
+    
     T old = backing[pos];
     backing[pos] = obj;
     return old;
@@ -69,7 +65,11 @@ public class ArrayList<T>
 
   @Override
   public T get(int pos) {
-    checkOutOfBounds(pos);
+
+    if (pos < 0 || pos >= size) {
+      throw new IndexOutOfBoundsException();
+    }
+    
     return backing[pos];
   }
 
@@ -93,7 +93,10 @@ public class ArrayList<T>
   @Override
   public T remove(int pos) {
 
-    checkOutOfBounds(pos);
+    if (pos < 0 || pos >= size) {
+      throw new IndexOutOfBoundsException();
+    }
+    
     T obj = backing[pos];
     backing[pos] = null;
     size--;
@@ -131,6 +134,11 @@ public class ArrayList<T>
   public void clear() {
     backing = (T[])new Object[initialCapacity];
     size = 0;
+  }
+  
+  @Override
+  public boolean isEmpty() {
+    return size == 0;
   }
 
   @Override
