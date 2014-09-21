@@ -27,6 +27,7 @@ public class DoublyLinkedList<T>
 
   public DoublyLinkedList() {
     
+    // setup the head and tail to point to each other
     head.next = tail;
     head.previous = null;
     tail.previous = head;
@@ -36,6 +37,44 @@ public class DoublyLinkedList<T>
   @Override
   public void add(T obj) {
     insert(size, obj);
+  }
+  
+  public void addFirst(T obj) {
+    
+    // get the entry after the head, could be the tail
+    Entry after = head.next;
+    
+    // create and link new entry
+    Entry newEntry = new Entry();
+    newEntry.value = obj;
+    newEntry.previous = head;
+    newEntry.next = after;
+    
+    // point head and after entries to new entry
+    head.next = newEntry;
+    after.previous = newEntry;
+    
+    // increase the size
+    size++;
+  }
+  
+  public void addLast(T obj) {
+    
+    // get the entry before the tail, could be the head
+    Entry before = tail.previous;
+    
+    // create and link new entry
+    Entry newEntry = new Entry();
+    newEntry.value = obj;
+    newEntry.previous = before;
+    newEntry.next = tail;
+    
+    // point tail and before entries to new entry
+    tail.previous = newEntry;
+    before.next = newEntry;
+    
+    // increase the size
+    size++;
   }
 
   @Override
@@ -50,6 +89,7 @@ public class DoublyLinkedList<T>
     Entry before = getEntryBefore(pos);
     Entry after = before.next;
 
+    // create and link new entry
     Entry newEntry = new Entry();
     newEntry.value = obj;
     newEntry.previous = before;
@@ -74,17 +114,20 @@ public class DoublyLinkedList<T>
     Entry atPos = beforePos.next;
     Entry afterPos = atPos.next;
 
+    // create and link the new entry
     Entry newEntry = new Entry();
     newEntry.value = obj;    
     newEntry.next = afterPos;
     newEntry.previous = beforePos;
     
+    // link the before and after entries to the new entry
     beforePos.next = newEntry;
     afterPos.previous = newEntry;
 
-    // return the old entry at position
+    // unlink the old entry at the position
     atPos.next = null;
     atPos.previous = null;
+    
     return atPos.value;
   }
 
@@ -96,11 +139,27 @@ public class DoublyLinkedList<T>
       throw new IndexOutOfBoundsException();
     }
 
-    // go to the entry right before the pos
-    Entry before = getEntryBefore(pos);
-    Entry entry = before.next;
-
-    return entry.value;
+    return getEntryBefore(pos).next.value;
+  }
+  
+  public T getFirst() {
+    
+    if (size == 0) {
+      throw new IndexOutOfBoundsException();
+    }
+    
+    // optimized version to get the head next value
+    return head.next.value;    
+  }
+  
+  public T getLast() {
+    
+    if (size == 0) {
+      throw new IndexOutOfBoundsException();
+    }
+    
+    // optimized version to get the tail previous value
+    return tail.previous.value;
   }
 
   @Override
@@ -136,12 +195,15 @@ public class DoublyLinkedList<T>
     Entry atPos = beforePos.next;
     Entry afterPos = atPos.next;
 
-    // link the before entry to the after entry, removing the entry at pos
+    // link the before entries
     beforePos.next = afterPos;
     afterPos.previous = beforePos;
     
+    // unlink the old entry
     atPos.next = null;
     atPos.previous = null;
+    
+    // decrement the size of the list
     size--;
 
     return atPos.value;
@@ -156,6 +218,54 @@ public class DoublyLinkedList<T>
     }
     remove(pos);
     return true;
+  }
+  
+  public T removeFirst() {
+    
+    if (size == 0) {
+      throw new IndexOutOfBoundsException();
+    }
+    
+    // get the first position and the one after, after could be tail
+    Entry first = head.next; 
+    Entry after = first.next;
+
+    // link the head to the second position, could be tail
+    head.next = after;
+    after.previous = head;
+    
+    // unlink the old first entry
+    first.next = null;
+    first.previous = null;
+    
+    // decrement size of the list
+    size--;
+    
+    return first.value;
+  }
+  
+  public T removeLast() {
+    
+    if (size == 0) {
+      throw new IndexOutOfBoundsException();
+    }
+    
+    // get the last position and the one before that, could be head
+    Entry last = tail.previous; 
+    Entry before = last.previous;
+
+    // link the tail to the second to last position, could be head
+    tail.previous = before;
+    before.next = tail;
+    
+    // unlink the old last entry
+    last.next = null;
+    last.previous = null;
+    
+    // decrement the size of the list
+    size--;
+    
+    return last.value;
   }
 
   @Override
