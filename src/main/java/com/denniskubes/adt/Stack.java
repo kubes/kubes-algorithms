@@ -1,45 +1,18 @@
 package com.denniskubes.adt;
 
-import java.util.EmptyStackException;
+public interface Stack<T> {
 
-public class Stack<T> {
+  public void push(T value);
 
-  private DoublyLinkedList<T> backing = new DoublyLinkedList<T>();
+  public T pop();
 
-  public void push(T value) {
-    backing.addFirst(value);
-  }
+  public T peek();
 
-  public T pop() {
+  public boolean isEmpty();
 
-    if (backing.isEmpty()) {
-      throw new EmptyStackException();
-    }
-    return backing.removeFirst();
-  }
+  public void clear();
   
-  public T peek() {
-    
-    if (backing.isEmpty()) {
-      throw new EmptyStackException();
-    }
-    return backing.getFirst();
-  }
+  public int size();
 
-  public boolean isEmpty() {
-    return backing.isEmpty();
-  }
-
-  public int size() {
-    return backing.size();
-  }
-
-  public void clear() {
-    backing.clear();
-  }
-
-  public Iterator<T> iterator() {
-    return backing.iterator();
-  }
-
+  public Iterator<T> iterator();
 }

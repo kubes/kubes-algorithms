@@ -33,6 +33,23 @@ public class SinglyLinkedList<T>
     insert(size, obj);
   }
 
+  public void addFirst(T obj) {
+
+    // get the entry after the head, could be the tail
+    Entry after = head.next;
+
+    // create and link new entry
+    Entry newEntry = new Entry();
+    newEntry.value = obj;
+    newEntry.next = after;
+
+    // point head and after entries to new entry
+    head.next = newEntry;
+
+    // increase the size
+    size++;
+  }
+
   @Override
   public void insert(int pos, T obj) {
 
@@ -150,7 +167,7 @@ public class SinglyLinkedList<T>
   public int size() {
     return size;
   }
-  
+
   @Override
   public boolean isEmpty() {
     return size == 0;
@@ -168,7 +185,7 @@ public class SinglyLinkedList<T>
     return new Iterator<T>() {
 
       private Entry current = head;
-      int pos = 0;
+      private int pos = 0;
 
       @Override
       public void first() {
@@ -184,7 +201,7 @@ public class SinglyLinkedList<T>
 
       @Override
       public boolean hasNext() {
-        
+
         // is the next one the end
         return current.next != tail;
       }
@@ -207,16 +224,15 @@ public class SinglyLinkedList<T>
         return current.value;
       }
 
-
       @Override
       public T previous() {
-        
+
         // we have reached the beginning, no previous
         if (pos == 0) {
           throw new IndexOutOfBoundsException();
         }
-        
-        // each call to preview requires searching all the way through the 
+
+        // each call to preview requires searching all the way through the
         // entire list to the position because of singly linked structure
         T value = get(pos - 1);
         pos--;

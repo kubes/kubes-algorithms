@@ -4,16 +4,14 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class TestStack {
+public abstract class BaseStackTester {
 
   public static String VALUE_1 = "value1";
   public static String VALUE_2 = "value2";
   public static String VALUE_3 = "value3";
   public static String VALUE_4 = "value4";
 
-  public Stack<String> getStack() {
-    return new Stack<String>();
-  }
+  public abstract Stack<String> getStack();
 
   @Test
   public void testPushPop() {
